@@ -1,0 +1,131 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Pessoa {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  nome  String
+  senha String
+
+  Aluno     Aluno?
+  Professor Professor?
+}
+
+model Aluno {
+  id     Int    @id
+  Pessoa Pessoa @relation(fields: [id], references: [id])
+
+  Matricula  Matricula[]
+  Resposta   Resposta[]
+  Nota       Nota[]
+  Devolutiva Devolutiva[]
+}
+
+model Professor {
+  id     Int    @id
+  tipo   String @unique
+  Pessoa Pessoa @relation(fields: [id], references: [id])
+
+  Curso   Curso[]
+  Mochila Mochila?
+  Prova   Prova[]
+}
+
+model Curso {
+  id   Int    @id @default(autoincrement())
+  nome String
+  tipo String
+
+  Professor Professor @relation(fields: [tipo], references: [tipo])
+
+  Prova     Prova[]
+  Matricula Matricula[]
+}
+
+model Mochila {
+  id          Int       @id @default(autoincrement())
+  professorId Int       @unique
+  Professor   Professor @relation(fields: [professorId], references: [id])
+
+  Pokemon Pokemon[]
+}
+
+model Pokemon {
+  id        Int     @id @default(autoincrement())
+  nome      String
+  tipo      String
+  mochilaId Int
+  Mochila   Mochila @relation(fields: [mochilaId], references: [id])
+}
+
+model Prova {
+  id          Int       @id @default(autoincrement())
+  cursoId     Int
+  professorId Int
+  dataCriacao DateTime
+  Curso       Curso     @relation(fields: [cursoId], references: [id])
+  Professor   Professor @relation(fields: [professorId], references: [id])
+
+  Questao    Questao[]
+  Nota       Nota[]
+  Devolutiva Devolutiva[]
+}
+
+model Questao {
+  id            Int    @id @default(autoincrement())
+  provaId       Int
+  pokemonNome   String
+  perguntaTipo  String
+  perguntaGolpe String
+  Prova         Prova  @relation(fields: [provaId], references: [id])
+
+  Resposta Resposta[]
+  Nota     Nota[]
+}
+
+model Resposta {
+  id            Int     @id @default(autoincrement())
+  questaoId     Int
+  alunoId       Int
+  respostaTipo  String
+  respostaGolpe String
+  Questao       Questao @relation(fields: [questaoId], references: [id])
+  Aluno         Aluno   @relation(fields: [alunoId], references: [id])
+}
+
+model Nota {
+  id        Int     @id @default(autoincrement())
+  provaId   Int
+  questaoId Int
+  alunoId   Int
+  nota      Float
+  Prova     Prova   @relation(fields: [provaId], references: [id])
+  Questao   Questao @relation(fields: [questaoId], references: [id])
+  Aluno     Aluno   @relation(fields: [alunoId], references: [id])
+}
+
+model Devolutiva {
+  id             Int      @id @default(autoincrement())
+  provaId        Int
+  alunoId        Int
+  notaFinal      Float
+  dataDevolutiva DateTime
+  Prova          Prova    @relation(fields: [provaId], references: [id])
+  Aluno          Aluno    @relation(fields: [alunoId], references: [id])
+}
+
+model Matricula {
+  id      Int   @id @default(autoincrement())
+  cursoId Int
+  alunoId Int
+  Curso   Curso @relation(fields: [cursoId], references: [id])
+  Aluno   Aluno @relation(fields: [alunoId], references: [id])
+}
