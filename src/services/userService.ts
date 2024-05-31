@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET as string; // Certifique-se de que o JWT_SECRET está definido
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
 interface UserInput {
   nome: string;
