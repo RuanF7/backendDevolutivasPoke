@@ -24,7 +24,12 @@ export class UserService {
         email,
         senha: hashedPassword,
         Aluno: isProfessor ? undefined : { create: {} },
-        Professor: isProfessor && tipo ? { create: { tipo } } : undefined,
+        Professor: isProfessor && tipo ? { 
+          create: {
+            tipo,
+            Mochila: { create: {} } // Cria a mochila automaticamente ao criar o professor
+          } 
+        } : undefined,
       },
     });
 
