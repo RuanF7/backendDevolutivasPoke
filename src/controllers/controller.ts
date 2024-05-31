@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { fetchPokemon } from '../services/service';
+import { fetchPokemon } from '../services/pokemonService';
 
 export const getPokemon = async (req: Request, res: Response) => {
   const { name } = req.params;
