@@ -76,13 +76,13 @@ export class ProfessorService {
     const newProva = await prisma.prova.create({
       data: {
         professorId,
-        cursoId: 1, // placeholder, adjust accordingly
+        cursoId: 1,
         dataCriacao: new Date(),
         Questao: {
           create: provaData.pokemonNomes.map((pokemonNome, index) => ({
             pokemonNome,
-            perguntaTipo: 'type', // placeholder, adjust accordingly
-            perguntaGolpe: 'move', // placeholder, adjust accordingly
+            perguntaTipo: 'type', 
+            perguntaGolpe: 'move', 
           })),
         },
       },
