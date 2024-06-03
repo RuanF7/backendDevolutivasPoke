@@ -34,6 +34,7 @@ model Professor {
   tipo   String @unique
   Pessoa Pessoa @relation(fields: [id], references: [id])
 
+  cursoId Int?
   Curso   Curso[]
   Mochila Mochila?
   Prova   Prova[]
