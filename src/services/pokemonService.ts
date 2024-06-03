@@ -11,7 +11,7 @@ export const fetchPokemon = async (name: string): Promise<PokemonData> => {
     const types = response.data.types.map((typeEntry: any) => typeEntry.type.name);
     const pokemonData: PokemonData = {
       name: response.data.name,
-      tipo: types[0]  // Supondo que estamos interessados no primeiro tipo do Pokémon
+      tipo: types[0]
     };
     return pokemonData;
   } catch (error) {
