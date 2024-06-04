@@ -95,6 +95,7 @@ export class ProfessorController {
           professorId,
           cursoId: curso.id,
           dataCriacao: new Date(),
+          nome: 'Prova Name',
           Questao: {
             create: provaData.pokemonNomes.map((pokemonNome: string) => ({
               pokemonNome,
