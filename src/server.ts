@@ -13,8 +13,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/professor', professorRoutes);
 app.use('/api/prova', provaRoutes);
 app.use('/api/cursos', cursoRoutes);
-app.use('/api/aluno', alunoRoutes);  // adicionando o uso das rotas dos alunos
-
+app.use('/api/aluno', alunoRoutes);  
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

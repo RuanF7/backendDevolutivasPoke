@@ -9,14 +9,12 @@ export class CursoService {
     });
 
     if (cursoExistente) {
-      // Associe o professor ao curso existente
       await prisma.professor.update({
         where: { id: professorId },
         data: { Curso: { connect: { id: cursoExistente.id } } },
       });
       return cursoExistente;
     } else {
-      // Crie um novo curso e associe o professor a ele
       const novoCurso = await prisma.curso.create({
         data: { nome: `Curso de ${tipo}`, tipo },
       });

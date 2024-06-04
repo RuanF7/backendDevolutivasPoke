@@ -45,7 +45,6 @@ export class ProfessorController {
         },
       });
 
-      // Chame o método criarCurso do CursoController
       await cursoService.criarCurso(professor.tipo, professorId);
 
       res.status(201).json(pokemon);
