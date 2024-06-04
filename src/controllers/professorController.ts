@@ -3,9 +3,11 @@ import { PrismaClient } from '@prisma/client';
 import { fetchPokemon } from '../services/pokemonService';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { CursoService } from '../services/cursoService';
+import { ProvaService } from '../services/provaService';
 
 const prisma = new PrismaClient();
 const cursoService = new CursoService();
+const provaService = new ProvaService(prisma);
 
 export class ProfessorController {
   static async addPokemonToMochila(req: Request, res: Response) {
@@ -114,6 +116,16 @@ export class ProfessorController {
       } else {
         res.status(500).json({ error: 'Failed to create prova' });
       }
+    }
+  }
+  static async corrigirProva(req: Request, res: Response) {
+    const { provaId, alunoId, correcao } = req.body;
+
+    try {
+      const devolutiva = await provaService.corrigirProva(provaId, alunoId, correcao);
+      res.status(200).json(devolutiva);
+    } catch (error) {
+      res.status(400).json({ error: (error as Error).message });
     }
   }
 }
