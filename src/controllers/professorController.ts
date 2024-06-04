@@ -2,8 +2,10 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { fetchPokemon } from '../services/pokemonService';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { CursoService } from '../services/cursoService';
 
 const prisma = new PrismaClient();
+const cursoService = new CursoService();
 
 export class ProfessorController {
   static async addPokemonToMochila(req: Request, res: Response) {
@@ -20,8 +22,7 @@ export class ProfessorController {
     try {
       const professor = await prisma.professor.findUnique({
         where: { id: professorId },
-        include: { Mochila: true, Curso: true},
-        
+        include: { Mochila: true, Curso: true },
       });
 
       if (!professor) {
@@ -38,9 +39,12 @@ export class ProfessorController {
         data: {
           nome: pokemonData.name,
           tipo: pokemonData.tipo,
-          mochilaId: professor.Mochila?.id ?? 0
-        }
+          mochilaId: professor.Mochila?.id ?? 0,
+        },
       });
+
+      // Chame o método criarCurso do CursoController
+      await cursoService.criarCurso(professor.tipo, professorId);
 
       res.status(201).json(pokemon);
     } catch (error) {
@@ -48,6 +52,7 @@ export class ProfessorController {
       res.status(500).json({ error: 'Failed to add Pokémon to mochila' });
     }
   }
+
 
   static async createProva(req: Request, res: Response) {
     const { professorId, provaData } = req.body;
