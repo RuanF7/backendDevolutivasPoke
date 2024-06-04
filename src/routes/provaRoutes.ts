@@ -1,8 +1,8 @@
-import { Router } from 'express';
-import { createProva } from '../controllers/provaController';
+import express from 'express';
+import ProvaController from '../controllers/provaController';
 
-const router = Router();
+const router = express.Router();
 
-router.post('/create', createProva);
+router.post('/prova', ProvaController.createProva);
 
 export default router;
