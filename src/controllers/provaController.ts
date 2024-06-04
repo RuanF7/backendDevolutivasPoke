@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import ProvaService from '../services/provaService';
+import { ProvaService } from '../services/provaService';
 
 const prisma = new PrismaClient();
 const provaService = new ProvaService(prisma);
