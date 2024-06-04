@@ -1,7 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import { fetchPokemon } from './pokemonService';
 
-class ProvaService {
+interface RespostaCorrecao {
+  questaoId: number;
+  alunoId: number;
+  nota: number;
+}
+
+export class ProvaService {
   private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
@@ -68,6 +74,55 @@ class ProvaService {
   
     return questoes;
   }
+  async corrigirProva(provaId: number, alunoId: number, correcao: RespostaCorrecao[]) {
+    const prova = await this.prisma.prova.findUnique({
+      where: { id: provaId },
+      include: { Questao: true }
+    });
+
+    if (!prova) {
+      throw new Error('Prova não encontrada');
+    }
+
+    let notaFinal = 0;
+    let totalPeso = 0;
+
+    const updatedQuestoes = correcao.map(resposta => {
+      const questao = prova.Questao.find(q => q.id === resposta.questaoId);
+
+      if (!questao) {
+        throw new Error(`Questão com ID ${resposta.questaoId} não encontrada na prova`);
+      }
+
+      const peso = questao.perguntaTipo === 'name' ? 4 / 3 : 2;
+      notaFinal += resposta.nota * peso;
+      totalPeso += peso;
+
+      return {
+        questaoId: questao.id,
+        nota: resposta.nota,
+        provaId: provaId,
+        alunoId: alunoId
+      };
+    });
+
+    notaFinal = (notaFinal / totalPeso) * 10; // Normalizando para a escala de 10
+
+    const devolutiva = await this.prisma.devolutiva.create({
+      data: {
+        provaId,
+        alunoId,
+        notaFinal,
+        dataDevolutiva: new Date(),
+        Nota: {
+          create: updatedQuestoes
+        }
+      },
+      include: { Nota: true }
+    });
+
+    return devolutiva;
+  }
 }
 
-export default ProvaService;
+
