@@ -4,27 +4,34 @@ const prisma = new PrismaClient();
 
 export class CursoService {
   async criarCurso(tipo: string, professorId: number) {
-    const cursoExistente = await prisma.curso.findFirst({
-      where: { tipo },
+    const professorExistente = await prisma.professor.findUnique({
+      where: { id: professorId },
     });
 
-    if (cursoExistente) {
-      await prisma.professor.update({
-        where: { id: professorId },
-        data: { Curso: { connect: { id: cursoExistente.id } } },
-      });
-      return cursoExistente;
-    } else {
-      const novoCurso = await prisma.curso.create({
-        data: { nome: `Curso de ${tipo}`, tipo },
-      });
-
-      await prisma.professor.update({
-        where: { id: professorId },
-        data: { Curso: { connect: { id: novoCurso.id } } },
-      });
-      return novoCurso;
+    if (!professorExistente) {
+      throw new Error('Professor não encontrado');
     }
+
+    if (professorExistente.cursoId) {
+      throw new Error('O professor já está associado a um curso');
+    }
+
+    const novoCurso = await prisma.curso.create({
+      data: { 
+        nome: `Curso de ${tipo}`, 
+        tipo, 
+        Professor: {
+          connect: { id: professorId }
+        } as any
+      },
+    });
+
+    await prisma.professor.update({
+      where: { id: professorId },
+      data: { cursoId: novoCurso.id },
+    });
+
+    return novoCurso;
   }
 
   async listarCursos() {
