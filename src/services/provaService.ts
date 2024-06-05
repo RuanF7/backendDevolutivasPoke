@@ -42,13 +42,61 @@ export class ProvaService {
         dataCriacao: new Date(),
         Questao: {
           create: questoes
-        }
-        
+        } 
       },
       include: { Questao: true }
     });
 
     return prova;
+  }
+
+  async criarDevolutiva(provaId: number, alunoId: number, correcao: RespostaCorrecao[]) {
+    const prova = await this.prisma.prova.findUnique({
+        where: { id: provaId },
+        include: { Questao: true }
+    });
+
+    if (!prova) {
+        throw new Error('Prova não encontrada');
+    }
+
+    let notaFinal = 0;
+    let totalPeso = 0;
+
+    const updatedQuestoes = correcao.map(resposta => {
+        const questao = prova.Questao.find(q => q.id === resposta.questaoId);
+
+        if (!questao) {
+            throw new Error(`Questão com ID ${resposta.questaoId} não encontrada na prova`);
+        }
+
+        const peso = questao.perguntaTipo === 'name' ? 4 / 3 : 2;
+        notaFinal += resposta.nota * peso;
+        totalPeso += peso;
+
+        return {
+            questaoId: questao.id,
+            nota: resposta.nota,
+            provaId: provaId,
+            alunoId: alunoId 
+        };
+    });
+
+    notaFinal = (notaFinal / totalPeso) * 10; 
+    const devolutiva = await this.prisma.devolutiva.create({
+        data: {
+            Prova: { connect: { id: provaId } },
+            Aluno:{ connect: { id: alunoId } },
+            notaFinal,
+            dataDevolutiva: new Date(),
+            Nota: {
+                create: updatedQuestoes
+            }
+        },
+        include: { Nota: true }
+    });
+
+    return devolutiva;
   }
 
   private async createQuestoes(pokemonNomes: string[]) {
@@ -74,6 +122,7 @@ export class ProvaService {
   
     return questoes;
   }
+
   async corrigirProva(provaId: number, alunoId: number, correcao: RespostaCorrecao[]) {
     const prova = await this.prisma.prova.findUnique({
       where: { id: provaId },
@@ -102,16 +151,15 @@ export class ProvaService {
         questaoId: questao.id,
         nota: resposta.nota,
         provaId: provaId,
-        alunoId: alunoId
+        alunoId: alunoId 
       };
     });
 
-    notaFinal = (notaFinal / totalPeso) * 10; // Normalizando para a escala de 10
-
+    notaFinal = (notaFinal / totalPeso) * 10; 
     const devolutiva = await this.prisma.devolutiva.create({
       data: {
-        provaId,
-        alunoId,
+        Prova: { connect: { id: provaId } },
+        Aluno:{ connect: { id: alunoId } },
         notaFinal,
         dataDevolutiva: new Date(),
         Nota: {
@@ -124,5 +172,3 @@ export class ProvaService {
     return devolutiva;
   }
 }
-
-
