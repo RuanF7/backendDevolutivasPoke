@@ -1,5 +1,5 @@
 import express from 'express';
-import ProvaController from '../controllers/provaController';
+import { ProvaController } from '../controllers/provaController';
 
 const router = express.Router();
 
