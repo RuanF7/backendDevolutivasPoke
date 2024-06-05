@@ -6,7 +6,7 @@ import { ProvaService } from '../services/provaService';
 const prisma = new PrismaClient();
 const provaService = new ProvaService(prisma);
 
-class ProvaController {
+export class ProvaController {
   static async createProva(req: Request, res: Response) {
     const { professorId, provaData } = req.body;
 
@@ -26,6 +26,15 @@ class ProvaController {
       }
     }
   }
-}
+  async criarDevolutiva(req: Request, res: Response) {
+    const { provaId, alunoId, correcao } = req.body;
 
-export default ProvaController;
+    try {
+      const devolutiva = await provaService.criarDevolutiva(provaId, alunoId, correcao);
+      res.status(201).json(devolutiva);
+    } catch (error) {
+      console.error('Erro ao criar devolutiva:', error);
+      res.status(500).json({ error: 'Falha ao criar devolutiva' });
+    }
+  }
+};
