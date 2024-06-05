@@ -16,6 +16,7 @@ CREATE TABLE "Aluno" (
 CREATE TABLE "Professor" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "tipo" TEXT NOT NULL,
+    "cursoId" INTEGER,
     CONSTRAINT "Professor_id_fkey" FOREIGN KEY ("id") REFERENCES "Pessoa" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -46,6 +47,7 @@ CREATE TABLE "Pokemon" (
 -- CreateTable
 CREATE TABLE "Prova" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "nome" TEXT NOT NULL,
     "cursoId" INTEGER NOT NULL,
     "professorId" INTEGER NOT NULL,
     "dataCriacao" DATETIME NOT NULL,
@@ -59,7 +61,7 @@ CREATE TABLE "Questao" (
     "provaId" INTEGER NOT NULL,
     "pokemonNome" TEXT NOT NULL,
     "perguntaTipo" TEXT NOT NULL,
-    "perguntaGolpe" TEXT NOT NULL,
+    "imagem" TEXT NOT NULL,
     CONSTRAINT "Questao_provaId_fkey" FOREIGN KEY ("provaId") REFERENCES "Prova" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -68,7 +70,7 @@ CREATE TABLE "Resposta" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "questaoId" INTEGER NOT NULL,
     "alunoId" INTEGER NOT NULL,
-    "respostaTipo" TEXT NOT NULL,
+    "respostaNome" TEXT NOT NULL,
     "respostaGolpe" TEXT NOT NULL,
     CONSTRAINT "Resposta_questaoId_fkey" FOREIGN KEY ("questaoId") REFERENCES "Questao" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Resposta_alunoId_fkey" FOREIGN KEY ("alunoId") REFERENCES "Aluno" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -81,9 +83,11 @@ CREATE TABLE "Nota" (
     "questaoId" INTEGER NOT NULL,
     "alunoId" INTEGER NOT NULL,
     "nota" REAL NOT NULL,
+    "devolutivaId" INTEGER NOT NULL,
     CONSTRAINT "Nota_provaId_fkey" FOREIGN KEY ("provaId") REFERENCES "Prova" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Nota_questaoId_fkey" FOREIGN KEY ("questaoId") REFERENCES "Questao" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "Nota_alunoId_fkey" FOREIGN KEY ("alunoId") REFERENCES "Aluno" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "Nota_alunoId_fkey" FOREIGN KEY ("alunoId") REFERENCES "Aluno" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Nota_devolutivaId_fkey" FOREIGN KEY ("devolutivaId") REFERENCES "Devolutiva" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable

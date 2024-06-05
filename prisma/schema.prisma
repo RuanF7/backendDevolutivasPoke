@@ -45,7 +45,8 @@ model Curso {
   nome String
   tipo String
 
-  Professor Professor @relation(fields: [tipo], references: [tipo])
+  professorId Int?
+  Professor   Professor? @relation(fields: [professorId], references: [id])
 
   Prova     Prova[]
   Matricula Matricula[]
@@ -69,6 +70,7 @@ model Pokemon {
 
 model Prova {
   id          Int       @id @default(autoincrement())
+  nome        String
   cursoId     Int
   professorId Int
   dataCriacao DateTime
@@ -81,12 +83,12 @@ model Prova {
 }
 
 model Questao {
-  id            Int    @id @default(autoincrement())
-  provaId       Int
-  pokemonNome   String
-  perguntaTipo  String
-  perguntaGolpe String
-  Prova         Prova  @relation(fields: [provaId], references: [id])
+  id           Int    @id @default(autoincrement())
+  provaId      Int
+  pokemonNome  String
+  perguntaTipo String
+  imagem       String
+  Prova        Prova  @relation(fields: [provaId], references: [id])
 
   Resposta Resposta[]
   Nota     Nota[]
@@ -96,21 +98,23 @@ model Resposta {
   id            Int     @id @default(autoincrement())
   questaoId     Int
   alunoId       Int
-  respostaTipo  String
+  respostaNome  String
   respostaGolpe String
   Questao       Questao @relation(fields: [questaoId], references: [id])
   Aluno         Aluno   @relation(fields: [alunoId], references: [id])
 }
 
 model Nota {
-  id        Int     @id @default(autoincrement())
-  provaId   Int
-  questaoId Int
-  alunoId   Int
-  nota      Float
-  Prova     Prova   @relation(fields: [provaId], references: [id])
-  Questao   Questao @relation(fields: [questaoId], references: [id])
-  Aluno     Aluno   @relation(fields: [alunoId], references: [id])
+  id           Int        @id @default(autoincrement())
+  provaId      Int
+  questaoId    Int
+  alunoId      Int
+  nota         Float
+  Prova        Prova      @relation(fields: [provaId], references: [id])
+  Questao      Questao    @relation(fields: [questaoId], references: [id])
+  Aluno        Aluno      @relation(fields: [alunoId], references: [id])
+  devolutivaId Int
+  Devolutiva   Devolutiva @relation(fields: [devolutivaId], references: [id])
 }
 
 model Devolutiva {
@@ -121,6 +125,7 @@ model Devolutiva {
   dataDevolutiva DateTime
   Prova          Prova    @relation(fields: [provaId], references: [id])
   Aluno          Aluno    @relation(fields: [alunoId], references: [id])
+  Nota           Nota[]
 }
 
 model Matricula {
