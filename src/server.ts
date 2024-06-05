@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import authRoutes from './routes/authRoutes';
 import professorRoutes from './routes/professorRoutes';
 import provaRoutes from './routes/provaRoutes';
@@ -7,6 +8,8 @@ import alunoRoutes from './routes/alunoRoutes';  // importando as rotas dos alun
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(cors());
 
 app.use(express.json());
 app.use('/api/auth', authRoutes);

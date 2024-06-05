@@ -27,7 +27,7 @@ export class UserService {
         Professor: isProfessor && tipo ? { 
           create: {
             tipo,
-            Mochila: { create: {} } // Cria a mochila automaticamente ao criar o professor
+            Mochila: { create: {} }
           } 
         } : undefined,
       },
