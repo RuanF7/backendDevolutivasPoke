@@ -21,7 +21,7 @@ export class AuthController {
 
     try {
       const result = await userService.loginUser(email, senha);
-      res.status(200).json(result);
+      res.status(200).json(result); 
       console.log('User logged in');
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });
