@@ -39,14 +39,22 @@ export class UserService {
   }
 
   async loginUser(email: string, senha: string) {
-    const pessoa = await prisma.pessoa.findUnique({ where: { email } });
+    const pessoa = await prisma.pessoa.findUnique({
+      where: { email },
+      include: {
+        Aluno: true,
+        Professor: true
+      }
+    });
 
     if (!pessoa || !(await bcrypt.compare(senha, pessoa.senha))) {
       throw new Error('Credenciais inválidas');
     }
 
-    const token = jwt.sign({ userId: pessoa.id }, JWT_SECRET, { expiresIn: '1h' });
+    const isProfessor = !!pessoa.Professor;
 
-    return { token };
+    const token = jwt.sign({ userId: pessoa.id, isProfessor: isProfessor }, JWT_SECRET, { expiresIn: '1h' });
+
+    return { token, isProfessor };
   }
 }
