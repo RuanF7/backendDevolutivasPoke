@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET as string;
@@ -24,16 +24,36 @@ export class UserService {
         email,
         senha: hashedPassword,
         Aluno: isProfessor ? undefined : { create: {} },
-        Professor: isProfessor && tipo ? { 
-          create: {
-            tipo,
-            Mochila: { create: {} }
-          } 
-        } : undefined,
+        Professor:
+          isProfessor && tipo
+            ? {
+                create: {
+                  tipo,
+                  Mochila: { create: {} },
+                },
+              }
+            : undefined,
       },
     });
 
-    const token = jwt.sign({ userId: pessoa.id }, JWT_SECRET, { expiresIn: '1h' });
+    if (isProfessor && tipo) {
+      const curso = await prisma.curso.create({
+        data: {
+          nome: tipo,
+          tipo: tipo,
+          professorId: pessoa.id,
+        },
+      });
+      console.log(
+        `Curso '${curso.nome}' criado para o professor '${pessoa.nome}'`
+      );
+    }
+
+    const token = jwt.sign(
+      { userId: pessoa.id, isProfessor: isProfessor },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
     return { token };
   }
@@ -43,17 +63,21 @@ export class UserService {
       where: { email },
       include: {
         Aluno: true,
-        Professor: true
-      }
+        Professor: true,
+      },
     });
 
     if (!pessoa || !(await bcrypt.compare(senha, pessoa.senha))) {
-      throw new Error('Credenciais inválidas');
+      throw new Error("Credenciais inválidas");
     }
 
     const isProfessor = !!pessoa.Professor;
 
-    const token = jwt.sign({ userId: pessoa.id, isProfessor: isProfessor }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(
+      { userId: pessoa.id, isProfessor: isProfessor },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
     return { token, isProfessor };
   }
