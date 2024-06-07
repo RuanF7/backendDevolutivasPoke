@@ -1,50 +1,37 @@
 import axios from 'axios';
 import { PrismaClient } from '@prisma/client';
+import { fetchPokemon } from './pokemonService';
 
 const prisma = new PrismaClient();
-
-interface PokemonData {
-  name: string;
-  types: string[];
-  moves: string[];
-}
-
-export const fetchPokemon = async (name: string): Promise<PokemonData> => {
-  try {
-    const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`);
-    const types = response.data.types.map((type: any) => type.type.name);
-    const moves = response.data.moves.map((move: any) => move.move.name);
-    return {
-      name: response.data.name,
-      types: types,
-      moves: moves,
-    };
-  } catch (error) {
-    throw new Error('Failed to fetch Pokemon data');
-  }
-};
 
 export class ProfessorService {
   async addPokemonToMochila(professorId: number, pokemonName: string) {
     const pokemon = await fetchPokemon(pokemonName);
-    
+    console.log('Received request with professorId:', professorId, 'and pokemonName:', pokemonName);
+    console.log('Fetched pokemon:', pokemon);
+
     const professor = await prisma.professor.findUnique({
       where: { id: professorId },
       include: { Mochila: true },
     });
 
+    console.log('Found professor:', professor);
+    console.log('Pokemon:', pokemon);
     if (!professor || !professor.Mochila) {
       throw new Error('Professor not found or has no mochila');
     }
+    console.log('Pokemon:', pokemon);
+    console.log('Professor type:', professor.tipo);
+    console.log('Pokemon types:', pokemon.tipo);
 
-    if (!pokemon.types.includes(professor.tipo)) {
+    if ( pokemon.tipo != professor.tipo) {
       throw new Error('Pokemon type does not match professor type');
     }
 
     const newPokemon = await prisma.pokemon.create({
       data: {
         nome: pokemon.name,
-        tipo: pokemon.types[0],
+        tipo: pokemon.tipo,
         mochilaId: professor.Mochila.id,
       },
     });
