@@ -11,7 +11,9 @@ const provaService = new ProvaService(prisma);
 
 export class ProfessorController {
   static async addPokemonToMochila(req: Request, res: Response) {
+    console.log('addPokemonToMochila method called');
     const { professorId, pokemonName } = req.body;
+    console.log('Received request with professorId:', professorId, 'and pokemonName:', pokemonName);
 
     if (typeof professorId !== 'number') {
       return res.status(400).json({ error: 'Invalid data format. Expected professorId as number.' });
@@ -24,16 +26,16 @@ export class ProfessorController {
     try {
       const professor = await prisma.professor.findUnique({
         where: { id: professorId },
-        include: { Mochila: true, Curso: true },
+        include: { Mochila: true },
       });
 
       if (!professor) {
         return res.status(404).json({ error: 'Professor not found' });
       }
-
+      
       const pokemonData = await fetchPokemon(pokemonName);
-
-      if (pokemonData.tipo !== professor.tipo) {
+      console.log(professor.tipo, pokemonData.tipo);
+      if (pokemonData.tipo != professor.tipo) {        
         return res.status(400).json({ error: 'Pokemon type does not match professor type' });
       }
 
@@ -44,14 +46,13 @@ export class ProfessorController {
           mochilaId: professor.Mochila?.id ?? 0,
         },
       });
-
-      await cursoService.criarCurso(professor.tipo, professorId);
-
+      console.log('Pokemon added to mochila:', pokemon);
       res.status(201).json(pokemon);
     } catch (error) {
       console.error('Error adding Pokémon to mochila:', error);
       res.status(500).json({ error: 'Failed to add Pokémon to mochila' });
     }
+  
   }
 
 
