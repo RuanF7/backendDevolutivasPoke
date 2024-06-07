@@ -85,8 +85,8 @@ model Prova {
 model Questao {
   id           Int    @id @default(autoincrement())
   provaId      Int
-  pokemonNome  String
-  perguntaTipo String
+  pergunta1    String
+  pergunta2    String
   imagem       String
   Prova        Prova  @relation(fields: [provaId], references: [id])
 
