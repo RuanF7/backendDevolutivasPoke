@@ -79,6 +79,7 @@ export class UserService {
       JWT_SECRET,
       { expiresIn: "1h" }
     );
+    console.log("userId:", pessoa.id.toString());
 
     return { token, isProfessor };
   }
