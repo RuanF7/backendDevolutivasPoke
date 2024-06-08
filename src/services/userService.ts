@@ -50,7 +50,7 @@ export class UserService {
     }
 
     const token = jwt.sign(
-      { userId: pessoa.id, isProfessor: isProfessor },
+      { userId: pessoa.id, isProfessor: isProfessor, tipo: tipo },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -72,9 +72,10 @@ export class UserService {
     }
 
     const isProfessor = !!pessoa.Professor;
+    const tipo = isProfessor ? pessoa.Professor?.tipo : undefined;
 
     const token = jwt.sign(
-      { userId: pessoa.id, isProfessor: isProfessor },
+      { userId: pessoa.id, isProfessor: isProfessor, tipo: tipo },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
