@@ -1,9 +1,5 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { fetchPokemon } from "../services/pokemonService";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { CursoService } from "../services/cursoService";
-import { ProvaService } from "../services/provaService";
 import { ProfessorService } from "../services/professorService";
 
 const prisma = new PrismaClient();
@@ -11,12 +7,11 @@ const professorService = new ProfessorService(prisma);
 
 export class ProfessorController {
   static async addPokemon(req: Request, res: Response) {
-    const { id } = req.params;
-    const { nome, tipo } = req.body;
+    const { id, nome, tipo } = req.body;
 
     try {
       const professor = await professorService.addPokemon({
-        id: Number(id),
+        id,
         nome,
         tipo,
       });
