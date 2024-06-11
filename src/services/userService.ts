@@ -37,7 +37,7 @@ export class UserService {
         tipo: userInput.tipo,
       },
     });
-
+    console.log(`Usuário ${user.nome} criado com sucesso`)
     return user;
   }
   async loginUser(email: string, senha: string) {
@@ -53,6 +53,7 @@ export class UserService {
       expiresIn: "1h",
     });
 
+    console.log(`O Usuário ${user.nome} está logado!`)
     return { token, tipo: user.tipo };
   }
 }
