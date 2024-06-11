@@ -1,5 +1,3 @@
-// prisma/schema.prisma
-
 datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
@@ -14,124 +12,69 @@ model Pessoa {
   email String @unique
   nome  String
   senha String
+  tipo  String
 
-  Aluno     Aluno?
-  Professor Professor?
-}
+  pokemon        Pokemon[]
+  matricula      Matricula[]
+  curso          Curso[]
+  resposta       Resposta[]
+  }
 
-model Aluno {
-  id     Int    @id
-  Pessoa Pessoa @relation(fields: [id], references: [id])
-
-  Matricula  Matricula[]
-  Resposta   Resposta[]
-  Nota       Nota[]
-  Devolutiva Devolutiva[]
-}
-
-model Professor {
-  id     Int    @id
-  tipo   String @unique
-  Pessoa Pessoa @relation(fields: [id], references: [id])
-
-  cursoId Int?
-  Curso   Curso[]
-  Mochila Mochila?
-  Prova   Prova[]
+model Pokemon {
+  id        Int    @id @default(autoincrement())
+  pessoaId  Int
+  nome      String
+  golpe     String
+  imagem    String
+  pessoa    Pessoa @relation(fields: [pessoaId], references: [id])
 }
 
 model Curso {
-  id   Int    @id @default(autoincrement())
-  nome String
-  tipo String
-
-  professorId Int?
-  Professor   Professor? @relation(fields: [professorId], references: [id])
-
-  Prova     Prova[]
-  Matricula Matricula[]
-}
-
-model Mochila {
-  id          Int       @id @default(autoincrement())
-  professorId Int       @unique
-  Professor   Professor @relation(fields: [professorId], references: [id])
-
-  Pokemon Pokemon[]
-}
-
-model Pokemon {
-  id        Int     @id @default(autoincrement())
-  nome      String
-  tipo      String
-  mochilaId Int
-  Mochila   Mochila @relation(fields: [mochilaId], references: [id])
-}
-
-model Prova {
-  id          Int       @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   nome        String
-  cursoId     Int
-  professorId Int
-  dataCriacao DateTime
-  Curso       Curso     @relation(fields: [cursoId], references: [id])
-  Professor   Professor @relation(fields: [professorId], references: [id])
+  professorId    Int
+  pessoa      Pessoa @relation(fields: [professorId], references: [id])
 
-  Questao    Questao[]
-  Nota       Nota[]
-  Devolutiva Devolutiva[]
-}
-
-model Questao {
-  id           Int    @id @default(autoincrement())
-  provaId      Int
-  pergunta1    String
-  pergunta2    String
-  imagem       String
-  Prova        Prova  @relation(fields: [provaId], references: [id])
-
-  Resposta Resposta[]
-  Nota     Nota[]
-}
-
-model Resposta {
-  id            Int     @id @default(autoincrement())
-  questaoId     Int
-  alunoId       Int
-  respostaNome  String
-  respostaGolpe String
-  Questao       Questao @relation(fields: [questaoId], references: [id])
-  Aluno         Aluno   @relation(fields: [alunoId], references: [id])
-}
-
-model Nota {
-  id           Int        @id @default(autoincrement())
-  provaId      Int
-  questaoId    Int
-  alunoId      Int
-  nota         Float
-  Prova        Prova      @relation(fields: [provaId], references: [id])
-  Questao      Questao    @relation(fields: [questaoId], references: [id])
-  Aluno        Aluno      @relation(fields: [alunoId], references: [id])
-  devolutivaId Int
-  Devolutiva   Devolutiva @relation(fields: [devolutivaId], references: [id])
-}
-
-model Devolutiva {
-  id             Int      @id @default(autoincrement())
-  provaId        Int
-  alunoId        Int
-  notaFinal      Float
-  dataDevolutiva DateTime
-  Prova          Prova    @relation(fields: [provaId], references: [id])
-  Aluno          Aluno    @relation(fields: [alunoId], references: [id])
-  Nota           Nota[]
+  prova       Prova []
+  matricula   Matricula[]
 }
 
 model Matricula {
-  id      Int   @id @default(autoincrement())
-  cursoId Int
-  alunoId Int
-  Curso   Curso @relation(fields: [cursoId], references: [id])
-  Aluno   Aluno @relation(fields: [alunoId], references: [id])
+  alunoId  Int
+  cursoId   Int
+
+  pessoa    Pessoa @relation(fields: [alunoId], references: [id])
+  curso     Curso @relation(fields: [cursoId], references: [id])
+
+  @@id([alunoId, cursoId])
+}
+
+model Prova {
+  id        Int    @id @default(autoincrement())
+  nome      String
+  cursoId   Int
+  curso Curso @relation(fields: [cursoId], references: [id])
+
+  questao Questao[]
+}
+
+model Questao {
+  id        Int @id @default(autoincrement())  
+  provaId   Int
+  pergunta  String
+  prova Prova @relation(fields: [provaId], references: [id])
+
+  resposta Resposta[]
+}
+
+model Resposta {
+  pessoaId  Int
+  questaoId Int  
+  resposta  String
+  nota      Float
+
+  pessoa    Pessoa @relation(fields: [pessoaId], references: [id])
+  questao   Questao @relation(fields: [questaoId], references: [id])
+
+  @@id([pessoaId, questaoId])
 }
