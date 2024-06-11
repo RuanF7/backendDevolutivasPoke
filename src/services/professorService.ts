@@ -16,17 +16,20 @@ export class ProfessorService {
     this.prisma = prisma;
   }
   async addPokemon(professor: Professor): Promise<Pokemon> {
+    console.log("Fetching pokemon data for:", professor.nome);
     const pokemonData = await fetchPokemon(professor.nome);
 
+    console.log("Creating pokemon in database with data:", pokemonData);
     const pokemon = await this.prisma.pokemon.create({
       data: {
         nome: pokemonData.nome,
-        golpe: pokemonData.golpe,
+        golpe: pokemonData.golpe[0],
         imagem: pokemonData.imagem,
         pessoaId: professor.id,
       },
     });
 
+    console.log("Pokemon created:", pokemon);
     return pokemon;
   }
 }
