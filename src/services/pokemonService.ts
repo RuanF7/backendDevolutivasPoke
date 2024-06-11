@@ -16,7 +16,9 @@ export const fetchPokemon = async (name: string): Promise<PokemonData> => {
       nome: response.data.name,
       tipo: response.data.types[0].type.name,
       imagem: response.data.sprites.front_default,
-      golpe: response.data.moves.map((move: { name: string }) => move.name),
+      golpe: response.data.moves.map(
+        (move: { move: { name: string } }) => move.move.name
+      ),
     };
     return pokemonData;
   } catch (error) {
