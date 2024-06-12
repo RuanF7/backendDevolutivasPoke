@@ -22,11 +22,11 @@ model Pessoa {
 
 model Pokemon {
   id        Int    @id @default(autoincrement())
-  pessoaId  Int
+  professorId  Int
   nome      String
   golpe     String
   imagem    String
-  pessoa    Pessoa @relation(fields: [pessoaId], references: [id])
+  pessoa    Pessoa @relation(fields: [professorId], references: [id])
 }
 
 model Curso {
