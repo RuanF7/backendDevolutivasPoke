@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { RegisterStudentToCourseService } from "../../services/registerStudentToCourse";
+import { RegisterStudentToCourseService } from "../../services/registerStudentToCourse/registerStudentToCourse";
 import prisma from "../../../prismaClient";
 
 const registerStudentToCourseService = new RegisterStudentToCourseService(
