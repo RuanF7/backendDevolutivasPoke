@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { StudentService } from "../services/alunoService";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../prismaClient";
 
-const prisma = new PrismaClient();
 const studentService = new StudentService(prisma);
 
 export class StudentController {

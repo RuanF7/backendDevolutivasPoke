@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../prismaClient";
 import { CourseService } from "../services/cursoService";
 
-const prisma = new PrismaClient();
 const courseService = new CourseService(prisma);
 
 export class CourseController {
