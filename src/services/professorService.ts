@@ -25,7 +25,7 @@ export class ProfessorService {
         nome: pokemonData.nome,
         golpe: pokemonData.golpe[0],
         imagem: pokemonData.imagem,
-        pessoaId: professor.id,
+        professorId: professor.id,
       },
     });
 

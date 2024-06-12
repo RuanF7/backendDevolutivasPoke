@@ -1,11 +1,12 @@
 import { Matricula, PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 interface Student {
   id: number;
   nome: string;
 }
+//Retirar
 
 interface RegisterStudent {
   alunoId: number;

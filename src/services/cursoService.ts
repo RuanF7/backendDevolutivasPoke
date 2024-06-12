@@ -6,6 +6,7 @@ interface Course {
   nome: string;
   professorId: number;
 }
+//Dar uma olhada nas exportações do prisma
 
 export class CourseService {
   private prisma: PrismaClient;

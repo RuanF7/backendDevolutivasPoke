@@ -2,7 +2,6 @@ import { Pessoa, PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 interface UserInput {
@@ -37,7 +36,7 @@ export class UserService {
         tipo: userInput.tipo,
       },
     });
-    console.log(`Usuário ${user.nome} criado com sucesso`)
+    console.log(`Usuário ${user.nome} criado com sucesso`);
     return user;
   }
   async loginUser(email: string, senha: string) {
@@ -53,7 +52,7 @@ export class UserService {
       expiresIn: "1h",
     });
 
-    console.log(`O Usuário ${user.nome} está logado!`)
+    console.log(`O Usuário ${user.nome} está logado!`);
     return { token, tipo: user.tipo };
   }
 }
