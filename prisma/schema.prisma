@@ -68,13 +68,13 @@ model Questao {
 }
 
 model Resposta {
-  pessoaId  Int
+  alunoId   Int
   questaoId Int  
   resposta  String
-  nota      Float
+  nota      Int?
 
-  pessoa    Pessoa @relation(fields: [pessoaId], references: [id])
+  pessoa    Pessoa @relation(fields: [alunoId], references: [id])
   questao   Questao @relation(fields: [questaoId], references: [id])
 
-  @@id([pessoaId, questaoId])
+  @@id([alunoId, questaoId])
 }
