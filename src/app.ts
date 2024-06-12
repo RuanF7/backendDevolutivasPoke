@@ -14,6 +14,6 @@ app.use(express.json());
 app.use("/auth", userRouter);
 app.use("/professor", professorRouter);
 // app.use('/api/prova', provaRoutes);
-app.use("/aluno", studentRouter);
+app.use("/student", studentRouter);
 
 export default app;
