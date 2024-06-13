@@ -9,3 +9,8 @@ export interface UserLogin {
   email: string;
   senha: string;
 }
+
+export interface UserLoginResponse {
+  email: string;
+  senha: string;
+}

@@ -27,6 +27,7 @@ export class UserRegisterService {
         tipo: userInput.tipo,
       },
     });
+
     console.log(`Usuário ${user.nome} criado com sucesso`);
     return user;
   }
