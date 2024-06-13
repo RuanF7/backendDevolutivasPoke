@@ -1,5 +1,8 @@
 import { PrismaClient, Prova } from "@prisma/client";
-import { DevelopingTest } from "../../../types/professorTypes";
+import {
+  CreatingTest,
+  CreatingTestResponse,
+} from "../../../types/professorTypes";
 
 export class ProfessorCreateTestService {
   private prisma: PrismaClient;
@@ -7,7 +10,7 @@ export class ProfessorCreateTestService {
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
-  async createTest(test: DevelopingTest): Promise<Prova> {
+  async createTest(test: CreatingTest): Promise<Prova> {
     const testData = await this.prisma.prova.create({
       data: {
         nome: test.nome,
@@ -15,6 +18,12 @@ export class ProfessorCreateTestService {
       },
     });
 
-    return testData;
+    const response: CreatingTestResponse = {
+      id: testData.id,
+      nome: testData.nome,
+      cursoId: testData.cursoId,
+    };
+
+    return response;
   }
 }

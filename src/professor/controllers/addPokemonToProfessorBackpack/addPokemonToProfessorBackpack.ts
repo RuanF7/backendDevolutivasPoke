@@ -9,13 +9,15 @@ export class AddPokemonController {
     const { id, nome, tipo } = req.body;
 
     try {
-      const professor = await addPokemonService.addPokemon({
+      const pokemon = await addPokemonService.addPokemon({
         id,
         nome,
         tipo,
       });
-      res.status(200).json(professor);
+      console.log("Pokemon created:", pokemon);
+      res.status(200).json(pokemon);
     } catch (error) {
+      console.error("Failed to add Pokémon", error);
       res.status(500).json({ error: error as Error });
     }
   }

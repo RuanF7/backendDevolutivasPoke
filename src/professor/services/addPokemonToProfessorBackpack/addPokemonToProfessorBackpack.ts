@@ -1,6 +1,9 @@
 import { Pokemon, PrismaClient } from "@prisma/client";
 import { GetPokemonFromPokeAPI } from "../getPokemonFromPokeAPI/getPokemonFromPokeAPI";
-import { Professor } from "../../../types/professorTypes";
+import {
+  Professor,
+  ProfessorAddPokemonResponse,
+} from "../../../types/professorTypes";
 
 export class AddPokemonService {
   private prisma: PrismaClient;
@@ -12,27 +15,29 @@ export class AddPokemonService {
   }
   async addPokemon(professor: Professor): Promise<Pokemon> {
     console.log("Fetching pokemon data for:", professor.nome);
-    try {
-      const pokemonData = await this.getPokemonFromPokeAPI.fetchPokemon(
-        professor.nome
-      );
+    const pokemonData = await this.getPokemonFromPokeAPI.fetchPokemon(
+      professor.nome
+    );
 
-      console.log("Creating pokemon in database with data:", pokemonData);
-      const pokemon = await this.prisma.pokemon.create({
-        data: {
-          nome: pokemonData.nome,
-          golpe: pokemonData.golpe[0],
-          imagem: pokemonData.imagem,
-          professorId: professor.id,
-        },
-      });
+    console.log("Creating pokemon in database with data:", pokemonData);
+    const pokemon = await this.prisma.pokemon.create({
+      data: {
+        nome: pokemonData.nome,
+        golpe: pokemonData.golpe[0],
+        imagem: pokemonData.imagem,
+        professorId: professor.id,
+      },
+    });
 
-      console.log("Pokemon created:", pokemon);
-      return pokemon;
-    } catch (error) {
-      throw new Error(
-        `Failed to add Pokémon for professor ${professor.nome}: ${error}`
-      );
-    }
+    const response: ProfessorAddPokemonResponse = {
+      id: pokemon.id,
+      nome: pokemon.nome,
+      tipo: pokemonData.tipo,
+      golpe: pokemon.golpe,
+      imagem: pokemon.imagem,
+      professorId: professor.id,
+    };
+
+    return response;
   }
 }

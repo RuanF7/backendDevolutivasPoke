@@ -1,5 +1,5 @@
 import { Resposta, PrismaClient } from "@prisma/client";
-import { Grade } from "../../../types/professorTypes";
+import { Grade, GradeResponse } from "../../../types/professorTypes";
 
 export class ProfessorCorrectTestService {
   private prisma: PrismaClient;
@@ -21,6 +21,13 @@ export class ProfessorCorrectTestService {
       },
     });
 
-    return gradeData;
+    const response: GradeResponse = {
+      alunoId: gradeData.alunoId,
+      questaoId: gradeData.questaoId,
+      resposta: gradeData.resposta,
+      nota: gradeData.nota !== undefined ? gradeData.nota : null,
+    };
+
+    return response;
   }
 }

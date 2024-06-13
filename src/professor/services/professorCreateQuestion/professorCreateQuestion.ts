@@ -1,5 +1,5 @@
 import { Questao, PrismaClient } from "@prisma/client";
-import { Question } from "../../../types/professorTypes";
+import { Question, QuestionResponse } from "../../../types/professorTypes";
 
 export class ProfessorCreateQuestionService {
   private prisma: PrismaClient;
@@ -15,6 +15,12 @@ export class ProfessorCreateQuestionService {
       },
     });
 
-    return questionData;
+    const response: QuestionResponse = {
+      id: questionData.id,
+      provaId: questionData.provaId,
+      pergunta: questionData.pergunta,
+    };
+
+    return response;
   }
 }

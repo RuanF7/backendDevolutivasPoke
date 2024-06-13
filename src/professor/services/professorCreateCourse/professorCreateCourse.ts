@@ -1,5 +1,5 @@
 import { Curso, PrismaClient } from "@prisma/client";
-import { Course } from "../../../types/professorTypes";
+import { Course, CourseResponse } from "../../../types/professorTypes";
 
 export class ProfessorCreateCourseService {
   private prisma: PrismaClient;
@@ -15,6 +15,12 @@ export class ProfessorCreateCourseService {
       },
     });
 
-    return courseData;
+    const response: CourseResponse = {
+      id: courseData.id,
+      nome: courseData.nome,
+      professorId: courseData.professorId,
+    };
+
+    return response;
   }
 }
