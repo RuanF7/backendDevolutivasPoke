@@ -1,8 +1,6 @@
 import { Pokemon, PrismaClient } from "@prisma/client";
 import { fetchPokemon } from "../../../services/pokemonService";
 
-const prisma = new PrismaClient();
-
 interface Professor {
   id: number;
   nome: string;
