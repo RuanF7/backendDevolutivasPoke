@@ -3,6 +3,7 @@ import { AddPokemonController } from "../controllers/addPokemonToProfessorBackpa
 import { ProfessorCreateCourseController } from "../controllers/professorCreateCourse/professorCreateCourse";
 import { ProfessorCreateTestController } from "../controllers/professorCreateTest/professorCreateTest";
 import { ProfessorCreateQuestionController } from "../controllers/professorCreateQuestion/professorCreateQuestion";
+import { ProfessorCorrectTestController } from "../controllers/professorCorrectTest/professorCorrectTest";
 
 const router = Router();
 
@@ -16,6 +17,7 @@ router.post("/criar-prova", (req, res) =>
 router.post("/criar-questao", (req, res) =>
   ProfessorCreateQuestionController.createQuestion(req, res)
 );
-// router.post('/corrigir-prova', ProfessorController.corrigirProva);
-
+router.post("/corrigir-prova", (req, res) =>
+  ProfessorCorrectTestController.correctTest(req, res)
+);
 export default router;
