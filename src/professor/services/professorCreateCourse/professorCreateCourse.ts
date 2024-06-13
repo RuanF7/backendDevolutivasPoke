@@ -1,9 +1,5 @@
 import { Curso, PrismaClient } from "@prisma/client";
-
-interface Course {
-  nome: string;
-  professorId: number;
-}
+import { Course } from "../../../types/professorTypes";
 
 export class ProfessorCreateCourseService {
   private prisma: PrismaClient;

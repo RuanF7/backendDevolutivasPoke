@@ -1,12 +1,6 @@
 import { Pessoa, PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-
-interface UserInput {
-  nome: string;
-  email: string;
-  senha: string;
-  tipo: string;
-}
+import { UserInput } from "../../../types/userTypes";
 
 export class UserRegisterService {
   private prisma: PrismaClient;

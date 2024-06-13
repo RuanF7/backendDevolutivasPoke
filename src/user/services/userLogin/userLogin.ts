@@ -1,6 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { Pessoa, PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { UserLogin } from "../../../types/userTypes";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -10,20 +11,27 @@ export class UserLoginService {
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
-  async loginUser(email: string, senha: string) {
-    const user = await this.prisma.pessoa.findUnique({
-      where: { email },
+  async loginUser(userLogin: UserLogin): Promise<Pessoa & { token: string }> {
+    const loginUser = await this.prisma.pessoa.findUnique({
+      where: { email: userLogin.email },
     });
 
-    if (!user || !(await bcrypt.compare(senha, user.senha))) {
+    if (
+      !loginUser ||
+      !(await bcrypt.compare(userLogin.senha, loginUser.senha))
+    ) {
       throw new Error("Credenciais inválidas");
     }
 
-    const token = jwt.sign({ userId: user.id, tipo: user.tipo }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: loginUser.id, tipo: loginUser.tipo },
+      JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
-    console.log(`O Usuário ${user.nome} está logado!`);
-    return { token, tipo: user.tipo };
+    console.log(`O Usuário ${loginUser.nome} está logado!`);
+    return { ...loginUser, token };
   }
 }

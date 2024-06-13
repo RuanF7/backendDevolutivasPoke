@@ -1,9 +1,5 @@
 import { PrismaClient, Prova } from "@prisma/client";
-
-interface DevelopingTest {
-  nome: string;
-  cursoId: number;
-}
+import { DevelopingTest } from "../../../types/professorTypes";
 
 export class ProfessorCreateTestService {
   private prisma: PrismaClient;

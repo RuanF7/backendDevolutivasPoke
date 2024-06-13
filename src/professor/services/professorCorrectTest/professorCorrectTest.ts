@@ -1,10 +1,5 @@
 import { Resposta, PrismaClient } from "@prisma/client";
-
-interface Grade {
-  alunoId: number;
-  questaoId: number;
-  nota: number;
-}
+import { Grade } from "../../../types/professorTypes";
 
 export class ProfessorCorrectTestService {
   private prisma: PrismaClient;

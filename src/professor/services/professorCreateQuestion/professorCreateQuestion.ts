@@ -1,9 +1,5 @@
 import { Questao, PrismaClient } from "@prisma/client";
-
-interface Question {
-  provaId: number;
-  pergunta: string;
-}
+import { Question } from "../../../types/professorTypes";
 
 export class ProfessorCreateQuestionService {
   private prisma: PrismaClient;

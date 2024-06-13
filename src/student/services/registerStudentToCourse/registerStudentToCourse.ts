@@ -1,14 +1,5 @@
 import { Matricula, PrismaClient } from "@prisma/client";
-
-interface Student {
-  id: number;
-  nome: string;
-}
-
-interface RegisterStudentToCourse {
-  alunoId: number;
-  cursoId: number;
-}
+import { RegisterStudentToCourse } from "../../../types/studentTypes";
 
 export class RegisterStudentToCourseService {
   private prisma: PrismaClient;
@@ -16,7 +7,9 @@ export class RegisterStudentToCourseService {
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
-  async registerStudentToCourse(input: RegisterStudentToCourse): Promise<Matricula> {
+  async registerStudentToCourse(
+    input: RegisterStudentToCourse
+  ): Promise<Matricula> {
     const matriculaData = await this.prisma.matricula.create({
       data: {
         alunoId: input.alunoId,

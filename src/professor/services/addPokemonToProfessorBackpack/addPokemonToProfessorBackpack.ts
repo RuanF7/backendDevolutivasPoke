@@ -1,11 +1,6 @@
 import { Pokemon, PrismaClient } from "@prisma/client";
 import { fetchPokemon } from "../../../services/pokemonService";
-
-interface Professor {
-  id: number;
-  nome: string;
-  tipo: string;
-}
+import { Professor } from "../../../types/professorTypes";
 
 export class AddPokemonService {
   private prisma: PrismaClient;
