@@ -24,3 +24,10 @@ export interface Professor {
   nome: string;
   tipo: string;
 }
+
+export interface PokemonData {
+  nome: string;
+  tipo: string;
+  golpe: string;
+  imagem: string;
+}
