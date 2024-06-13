@@ -1,5 +1,8 @@
 import { Matricula, PrismaClient } from "@prisma/client";
-import { RegisterStudentToCourse } from "../../../types/studentTypes";
+import {
+  RegisterStudentToCourse,
+  RegisterStudentToCourseResponse,
+} from "../../../types/studentTypes";
 
 export class RegisterStudentToCourseService {
   private prisma: PrismaClient;
@@ -17,6 +20,11 @@ export class RegisterStudentToCourseService {
       },
     });
 
-    return matriculaData;
+    const response: RegisterStudentToCourseResponse = {
+      alunoId: matriculaData.alunoId,
+      cursoId: matriculaData.cursoId,
+    };
+
+    return response;
   }
 }

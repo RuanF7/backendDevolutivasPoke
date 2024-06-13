@@ -1,5 +1,5 @@
 import { Resposta, PrismaClient } from "@prisma/client";
-import { Answer } from "../../../types/studentTypes";
+import { Answer, AnswerResponse } from "../../../types/studentTypes";
 
 export class StudentTestAnswersService {
   private prisma: PrismaClient;
@@ -17,6 +17,13 @@ export class StudentTestAnswersService {
       },
     });
 
-    return answerData;
+    const response: AnswerResponse = {
+      alunoId: answerData.alunoId,
+      questaoId: answerData.questaoId,
+      resposta: answerData.resposta,
+      nota: answerData.nota !== undefined ? answerData.nota : null,
+    };
+
+    return response;
   }
 }
