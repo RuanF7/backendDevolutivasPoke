@@ -41,4 +41,32 @@ export class ProfessorCreateCourseController {
       }
     }
   }
+  static async getCursoIdByProfessorId(req: Request, res: Response) {
+    const { professorId } = req.params;
+    try {
+      if (!professorId) {
+        throw new BadRequestError("Faltam campos obrigatórios: professorId");
+      }
+      const curso = await prisma.curso.findFirst({
+        where: {
+          professorId: parseInt(professorId),
+        },
+      });
+      if (!curso) {
+        throw new NotFoundError("Curso não encontrado.");
+      }
+      console.log("Curso encontrado com sucesso!:", curso);
+      res.status(200).json(curso);
+    } catch (error) {
+      console.error("Erro ao buscar curso:", error);
+      if (error instanceof BadRequestError) {
+        res.status(400).json({ message: error.message });
+      } else if (error instanceof NotFoundError) {
+        res.status(404).json({ message: error.message });
+      } else {
+        const internalError = new InternalServerError("Erro no servidor.");
+        return res.status(500).json({ error: internalError.message });
+      }
+    }
+  }
 }

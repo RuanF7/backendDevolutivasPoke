@@ -20,4 +20,7 @@ router.post("/criar-questao", (req, res) =>
 router.post("/corrigir-prova", (req, res) =>
   ProfessorCorrectTestController.correctTest(req, res)
 );
+router.get("/curso/:professorId", (req, res) =>
+  ProfessorCreateCourseController.getCursoIdByProfessorId(req, res)
+);
 export default router;
