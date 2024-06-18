@@ -23,13 +23,14 @@ export class UserLoginService {
       throw new Error("Credenciais inválidas");
     }
 
-    const token = jwt.sign(
-      { userId: loginUser.id, tipo: loginUser.tipo },
-      JWT_SECRET,
-      {
-        expiresIn: "1h",
-      }
-    );
+    const tokenPayload = {
+      userId: loginUser.id,
+      tipo: loginUser.tipo,
+    };
+
+    const token = jwt.sign(tokenPayload, JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     console.log(`O Usuário ${loginUser.nome} está logado!`);
     return { ...loginUser, token };
