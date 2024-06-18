@@ -29,7 +29,7 @@ export class GetPokemonFromPokeAPI {
       nome: pokemonData.nome,
       tipo: pokemonData.tipo,
       imagem: pokemonData.imagem,
-      golpe: pokemonData.golpe[0],
+      golpe: pokemonData.golpe,
     };
 
     return response;

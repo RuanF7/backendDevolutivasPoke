@@ -4,22 +4,23 @@ import { AddPokemonService } from "../../services/addPokemonToProfessorBackpack/
 import { BadRequestError } from "../../../errors/badRequestError";
 import { NotFoundError } from "../../../errors/notFoundError";
 import { InternalServerError } from "../../../errors/internalServerError";
+import { ProfessorAddPokemon } from "../../../types/professorTypes";
 
 const addPokemonService = new AddPokemonService(prisma);
 
 export class AddPokemonController {
   static async addPokemon(req: Request, res: Response) {
-    const { id, nome, tipo } = req.body;
+    const { professorId, pokemonName } = req.body;
 
     try {
-      if (!id || !nome || !tipo) {
-        throw new BadRequestError("Faltam campos obrigatórios: id, nome, tipo");
+      if (!professorId || !pokemonName) {
+        throw new BadRequestError(
+          "Faltam campos obrigatórios: professorId, pokemonName"
+        );
       }
-      const pokemon = await addPokemonService.addPokemon({
-        id,
-        nome,
-        tipo,
-      });
+
+      const data: ProfessorAddPokemon = { professorId, pokemonName };
+      const pokemon = await addPokemonService.addPokemon(data);
 
       if (!pokemon) {
         throw new NotFoundError("Não foi possível adicionar o pokemon.");

@@ -64,6 +64,11 @@ export interface PokemonDataResponse {
   imagem: string;
 }
 
+export interface ProfessorAddPokemon {
+  professorId: number;
+  pokemonName: string;
+}
+
 export interface ProfessorAddPokemonResponse {
   id: number;
   nome: string;

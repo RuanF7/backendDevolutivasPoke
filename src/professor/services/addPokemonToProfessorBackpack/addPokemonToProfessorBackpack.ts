@@ -1,8 +1,9 @@
 import { Pokemon, PrismaClient } from "@prisma/client";
 import { GetPokemonFromPokeAPI } from "../getPokemonFromPokeAPI/getPokemonFromPokeAPI";
 import {
-  Professor,
+  ProfessorAddPokemon,
   ProfessorAddPokemonResponse,
+  PokemonData,
 } from "../../../types/professorTypes";
 
 export class AddPokemonService {
@@ -13,11 +14,15 @@ export class AddPokemonService {
     this.prisma = prisma;
     this.getPokemonFromPokeAPI = new GetPokemonFromPokeAPI();
   }
-  async addPokemon(professor: Professor): Promise<Pokemon> {
-    console.log("Fetching pokemon data for:", professor.nome);
-    const pokemonData = await this.getPokemonFromPokeAPI.fetchPokemon(
-      professor.nome
-    );
+  async addPokemon(
+    data: ProfessorAddPokemon
+  ): Promise<ProfessorAddPokemonResponse> {
+    const { professorId, pokemonName } = data;
+
+    console.log("Fetching pokemon data for:", pokemonName);
+
+    const pokemonData: PokemonData =
+      await this.getPokemonFromPokeAPI.fetchPokemon(pokemonName);
 
     console.log("Creating pokemon in database with data:", pokemonData);
     const pokemon = await this.prisma.pokemon.create({
@@ -25,7 +30,7 @@ export class AddPokemonService {
         nome: pokemonData.nome,
         golpe: pokemonData.golpe[0],
         imagem: pokemonData.imagem,
-        professorId: professor.id,
+        professorId,
       },
     });
 
@@ -35,7 +40,7 @@ export class AddPokemonService {
       tipo: pokemonData.tipo,
       golpe: pokemon.golpe,
       imagem: pokemon.imagem,
-      professorId: professor.id,
+      professorId: pokemon.professorId,
     };
 
     return response;
