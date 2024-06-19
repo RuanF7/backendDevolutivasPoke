@@ -77,3 +77,8 @@ export interface ProfessorAddPokemonResponse {
   imagem: string;
   professorId: number;
 }
+
+export interface HavePokemon {
+  professorId: number;
+  nome: string;
+}
