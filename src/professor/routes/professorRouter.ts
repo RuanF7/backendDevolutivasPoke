@@ -23,4 +23,8 @@ router.post("/corrigir-prova", (req, res) =>
 router.get("/curso/:professorId", (req, res) =>
   ProfessorCreateCourseController.getCursoIdByProfessorId(req, res)
 );
+router.get("/prova/:professorId/:nomeProva", (req, res) =>
+  ProfessorCreateQuestionController.getProvaId(req, res)
+);
+
 export default router;
