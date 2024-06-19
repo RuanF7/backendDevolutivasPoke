@@ -10,6 +10,15 @@ const registerStudentToCourseService = new RegisterStudentToCourseService(
 );
 
 export class RegisterStudentController {
+  static async listCourses(req: Request, res: Response) {
+    try {
+      const cursos = await prisma.curso.findMany();
+      res.status(200).json(cursos);
+    } catch (error) {
+      console.error("Erro ao buscar cursos:", error);
+      res.status(500).json({ error: "Erro ao buscar cursos." });
+    }
+  }
   static async registerStudent(req: Request, res: Response) {
     const { alunoId, cursoId } = req.body;
 
