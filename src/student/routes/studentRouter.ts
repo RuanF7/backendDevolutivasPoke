@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { RegisterStudentController } from "../controllers/registerStudentToCourse/registerStudentToCourse";
 import { StudentTestAnswerController } from "../controllers/studentTestAnswers/studentTestAnswers";
+
 const router = Router();
 
 router.post("/matricular", (req, res) =>
@@ -9,11 +10,13 @@ router.post("/matricular", (req, res) =>
 router.post("/responder-prova", (req, res) =>
   StudentTestAnswerController.createAnswer(req, res)
 );
-// router.post("/realizar-prova", (req, res) =>
-//   alunoController.realizarProva(req, res)
-// );
-// router.post("/criar-devolutiva", (req, res) =>
-//   provaController.criarDevolutiva(req, res)
-// );
+router.get("/cursos", (req, res) =>
+  RegisterStudentController.listCourses(req, res)
+);
+router.get(
+  "/provas-disponiveis/:alunoId",
+  StudentTestAnswerController.getAvailableTests
+);
+router.get("/:provaId/questoes", StudentTestAnswerController.getQuestoes);
 
 export default router;
