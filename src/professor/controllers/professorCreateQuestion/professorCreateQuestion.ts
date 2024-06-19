@@ -12,12 +12,12 @@ const professorCreateQuestionService = new ProfessorCreateQuestionService(
 export class ProfessorCreateQuestionController {
   static async createQuestion(req: Request, res: Response) {
     console.log("Requisição:", req.body);
-    const { provaId, pergunta } = req.body;
+    const { provaId, pergunta, professorId } = req.body;
 
     try {
-      if (!provaId || !pergunta) {
+      if (!provaId || !pergunta || !professorId) {
         throw new BadRequestError(
-          "Faltam campos obrigatórios: provaId, pergunta"
+          "Faltam campos obrigatórios: provaId, pergunta, professorId"
         );
       }
 
@@ -43,6 +43,47 @@ export class ProfessorCreateQuestionController {
         const internalError = new InternalServerError("Erro no servidor.");
         return res.status(500).json({ error: internalError.message });
       }
+    }
+  }
+  static async getProvaId(req: Request, res: Response) {
+    const { professorId, nomeProva } = req.params;
+    console.log("Parâmetros recebidos:", { professorId, nomeProva });
+
+    try {
+      // 1. Busque o cursoId pelo professorId
+      const curso = await prisma.curso.findFirst({
+        where: {
+          professorId: parseInt(professorId),
+        },
+      });
+
+      // 2. Se curso não for encontrado, retorne um erro
+      if (!curso) {
+        throw new NotFoundError("Curso não encontrado");
+      }
+
+      console.log("Curso encontrado com sucesso!", curso);
+
+      // 3. Com o cursoId encontrado, busque a prova
+      const prova = await prisma.prova.findFirst({
+        where: {
+          cursoId: curso.id,
+          nome: nomeProva,
+        },
+      });
+
+      // 4. Se a prova não for encontrada, retorne um erro
+      if (!prova) {
+        throw new NotFoundError("Prova não encontrada");
+      }
+
+      console.log("Prova encontrada:", prova);
+
+      // 5. Retorne a resposta com a prova encontrada
+      res.status(200).json({ id: prova.id, nome: prova.nome });
+    } catch (error) {
+      console.error("Erro ao buscar prova:", error);
+      res.status(500).json({ message: "Erro ao buscar prova" });
     }
   }
 }
